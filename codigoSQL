@@ -1,0 +1,81 @@
+-- Creación de Tabla de Usuarios
+CREATE TABLE usuarios (
+    id_usuario NUMBER(10) PRIMARY KEY,
+    usuario VARCHAR2(50) NOT NULL,
+    password VARCHAR2(50) NOT NULL,
+    correo_electronico VARCHAR2(50) NOT NULL,
+    tipo_usuario VARCHAR2(20) NOT NULL,
+    estado VARCHAR2(10) NOT NULL
+);
+
+-- Creación de Tabla de Permisos
+CREATE TABLE permisos (
+    id_permiso NUMBER(10) PRIMARY KEY,
+    descripcion VARCHAR2(50) NOT NULL,
+    estado VARCHAR2(10) NOT NULL
+);
+
+-- Creación de Tabla de Usuarios_Permisos
+CREATE TABLE usuarios_permisos (
+    id_usuario_permiso NUMBER(10) PRIMARY KEY,
+    id_usuario NUMBER(10) NOT NULL,
+    id_permiso NUMBER(10) NOT NULL,
+    estado VARCHAR2(10) NOT NULL,
+    CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+    CONSTRAINT fk_permiso FOREIGN KEY (id_permiso) REFERENCES permisos(id_permiso)
+);
+
+-- Creación de Tabla de Items
+CREATE TABLE items (
+    id_item NUMBER(10) PRIMARY KEY,
+    os NUMBER(9) NOT NULL,
+    clasificacion VARCHAR2(20) NOT NULL,
+    descripcion VARCHAR2(20) NOT NULL,
+    ubicacion VARCHAR2(7) NOT NULL,
+    bloque CHAR(1) NOT NULL,
+    columna NUMBER(1) NOT NULL,
+    fila NUMBER(1) NOT NULL,
+    lado CHAR(1) NOT NULL,
+    estado VARCHAR2(10) NOT NULL,
+    CONSTRAINT fk_os FOREIGN KEY (os) REFERENCES ordenes_servicio(os)
+);
+
+-- Creación de Tabla de Ordenes de Servicio
+CREATE TABLE ordenes_servicio (
+    os NUMBER(9) PRIMARY KEY,
+    fecha_creacion DATE NOT NULL,
+    CONSTRAINT ck_fecha_creacion CHECK (fecha_creacion >= DATE '2000-01-01')
+);
+
+-- Creación de Tabla de Salidas
+CREATE TABLE salidas (
+    id_salida NUMBER(10) PRIMARY KEY,
+    id_item NUMBER(10) NOT NULL,
+    fecha_salida DATE NOT NULL,
+    CONSTRAINT fk_id_item FOREIGN KEY (id_item) REFERENCES items(id_item)
+);
+
+-- Creación de Tabla de Auditoria
+CREATE TABLE auditoria (
+    id_auditoria NUMBER(10) PRIMARY KEY,
+    id_item NUMBER(10) NOT NULL,
+    fecha_modificacion DATE NOT NULL,
+    usuario_modificacion VARCHAR2(50) NOT NULL,
+    CONSTRAINT fk_id_item_auditoria FOREIGN KEY (id_item) REFERENCES items(id_item)
+);
+
+-- Creación de Tabla de Notificaciones
+CREATE TABLE notificaciones (
+    id_notificacion NUMBER(10) PRIMARY KEY,
+    id_usuario NUMBER(10) NOT NULL,
+    mensaje VARCHAR2(100) NOT NULL,
+    leido CHAR(1) DEFAULT 'N',
+    fecha_notificacion DATE NOT NULL,
+    CONSTRAINT fk_id_usuario_notificacion FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
+-- Creación de Tabla de Reportes
+CREATE TABLE reportes (
+    id_reporte NUMBER(10) PRIMARY KEY,
+    nombre_reporte VARCHAR2(50) NOT NULL,
+   
